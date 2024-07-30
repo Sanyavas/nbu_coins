@@ -28,7 +28,7 @@ class ColorFormatter(logging.Formatter):
         return super().format(record)
 
 
-file = 'data/recruitingAI.log'
+file = 'data/coins_logs.log'
 time_format = "%d-%m-%Y %H:%M:%S"
 _format = "[%(levelname)s]  %(asctime)s{time} - %(name)s - %(funcName)s(%(lineno)d) - %(message)s"
 

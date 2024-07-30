@@ -51,59 +51,58 @@ class PlaywrightRunner:
         try:
             with sync_playwright() as playwright:
                 firefox = playwright.firefox
-                browser = firefox.launch(headless=False)
+                browser = firefox.launch(headless=False)  # now without proxy
                 page = browser.new_page()
                 page.goto(link)
-                # screenshot = page.screenshot()
 
-                # Click on the login button
+                # fill and click on the login button
+                time.sleep(random.randint(3, 5))
                 page.fill("input[name='email_address']", self.email)
                 page.fill("input[name='password']", self.password)
-                time.sleep(random.randint(1, 3))
-                page.locator('button[class="btn btn-default"]').click()
+                time.sleep(random.randint(2, 3))
+                login_button = page.wait_for_selector('button[class="btn btn-default"]', state='visible')
+                login_button.focus()  # Фокус на елемент
+                login_button.click()  # Клік на елемент
+                # buy_product.tap()  # Натискання (для мобільних)
+                # buy_product.dispatch_event("click")  # Виклик події кліку
+                logger.info(f"playwright | {self.email} ==> Авторизація пройшла успішно!",
+                            extra={'custom_color': True})
+
                 # page.get_by_text("Увійти").click()
-                time.sleep(random.randint(1, 3))
+
                 # Search for the product
+                time.sleep(random.randint(1, 3))
                 page.wait_for_selector(".small-menu-search").click()  # кнопка пошукового вікна
                 page.wait_for_selector("#searchpr").fill(self.coin_name)  # вікно для введення тексту
                 page.wait_for_selector("#search-form-button").click()  # кнопка запуску пошуку
-                page.wait_for_selector("div.product").click()  # Кнопка запиту продукту
-                logger.info(f"{self.coin_name} в пошуку знайдено!")
                 time.sleep(random.randint(1, 3))
-                # Click on the product and buy it
+                page.wait_for_selector("div.product").click()  # Кнопка запиту продукту
+                logger.info(f"{self.email} | '{self.coin_name}' в пошуку знайдено!")
+
+                # Click on the product and buy
                 try:
+                    time.sleep(random.randint(1, 3))
                     buy_product = page.wait_for_selector("div#r_buy_intovar", state='visible')  # Кнопка "Купити"
+                    buy_product.focus()
                     buy_product.click()
-                    logger.info(f"'{self.coin_name}' успішно додано в кошик.", extra={'custom_color': True})
+                    logger.info(f"{self.email} | '{self.coin_name}' успішно додано в кошик.",
+                                extra={'custom_color': True})
                     time.sleep(25)
                 except Exception as err:
-                    logger.error(f"Не вдалося додати товар в кошик: {err}")
+                    logger.error(f"{self.email} | '{self.coin_name}' Не вдалося додати товар в кошик: {err}")
                 finally:
                     browser.close()
-
                 return
         except Exception as e:
             if self.handle_proxy_error(e):
                 return self.buy_coins()
-            logger.error(f"PlaywrightRunner Error: {e}")
+            logger.error(f"{self.email} | PlaywrightRunner Error: {e}")
             return None
 
         # login_button = page.wait_for_selector("button.btn.btn-default", state='visible')
         # login_button.click()
 
-        # Заповнюємо дані для входу
-        # page.fill("input[name='email_address']", self.email)
-        # page.fill("input[name='password']", self.password)
-        #
-        # # Натискаємо на кнопку "Увійти"
-        # try:
-        #     submit_button = page.get_by_text("Увійти")
-        #     submit_button.click()
-        #     logger.info(f"{self.email} - Успішно ввійшов в аккаунт!", extra={'custom_color': True})
-        # except TimeoutError:
-        #     logger.error(f"{self.email} - Не вдалося знайти або натиснути кнопку 'Увійти'!")
 
-
-def playwright_run(coin_name):
-    runner = PlaywrightRunner(EMAIL_NBU, PASSWORD_NBU, coin_name)
+def playwright_run(email_nbu, password_nbu, coin_name):
+    runner = PlaywrightRunner(email_nbu, password_nbu, coin_name)
     runner.buy_coins()
