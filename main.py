@@ -26,7 +26,7 @@ PASSWORD_NBU_DIMA = config.get("PASSWORD_NBU_DIMA")
 # COIN_NAME = "Пам`ятна банкнота номіналом 20 грн. до 160-річчя від дня народження І.Франка"
 COIN_NAME = "Східний календар"
 # COIN_NAME = "Чорнобиль. Відродження. Лелека чорний"
-COIN_NAME1 = "160-річчя від дня народження І.Франка"
+COIN_NAME1 = "Єдність рятує світ"
 
 
 # COIN_NAME = "Нептун"
@@ -63,14 +63,12 @@ async def main_cron_run():
         logger.error(f"Error: {e}")
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 #     # asyncio.run(main_cron_run())
 #
 #     # selenium_run(EMAIL_NBU, PASSWORD_NBU, COIN_NAME1)
 #     # playwright_run(EMAIL_NBU, PASSWORD_NBU, COIN_NAME1)
-#     playwright_run(EMAIL_NBU_DIMA, PASSWORD_NBU_DIMA, COIN_NAME1)
+    playwright_run(EMAIL_NBU, PASSWORD_NBU, COIN_NAME)
 
-if __name__ == '__main__':
+    # playwright_run_test(EMAIL_NBU_DIMA, PASSWORD_NBU_DIMA, COIN_NAME)
 
-    # Приклад запуску
-    playwright_run_test("Східний календар")
