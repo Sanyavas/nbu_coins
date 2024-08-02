@@ -41,17 +41,6 @@ stream_handler.setLevel(logging.DEBUG)
 # Use the custom ColorFormatter for the stream handler
 stream_handler.setFormatter(ColorFormatter(_format.format(time=""), datefmt=time_format))
 
-# file = 'data/recruitingAI.log'
-#
-# file_handler = logging.FileHandler(file, encoding='utf-8')
-# file_handler.setLevel(logging.INFO)
-# file_handler.setFormatter(logging.Formatter(_format))
-#
-# stream_handler = logging.StreamHandler()
-# stream_handler.setLevel(logging.DEBUG)
-# # Use the custom ColorFormatter for the stream handler
-# stream_handler.setFormatter(ColorFormatter(_format))
-
 
 def get_logger(name):
     logger = logging.getLogger(name)
