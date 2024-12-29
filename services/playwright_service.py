@@ -101,7 +101,7 @@ class PlaywrightAsyncRunner:
         """
         Купівля знайденого продукту.
         """
-        max_attempts = 5  # Максимальна кількість спроб
+        max_attempts = 5
         attempt = 0
 
         while attempt < max_attempts:
@@ -115,6 +115,7 @@ class PlaywrightAsyncRunner:
                     await buy_button.click()
                     logger.info(f"{self.email} | '{self.coin_name}' успішно додано в кошик.",
                                 extra={'custom_color': True})
+                    await asyncio.sleep(50)
                     return
                 else:
                     logger.warning(

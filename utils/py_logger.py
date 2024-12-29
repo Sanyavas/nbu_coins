@@ -1,4 +1,5 @@
 import logging
+import os
 
 # ANSI escape codes for colors
 RED = '\033[91m'
@@ -28,9 +29,14 @@ class ColorFormatter(logging.Formatter):
         return super().format(record)
 
 
-file = 'data/coins_logs.log'
 time_format = "%d-%m-%Y %H:%M:%S"
-_format = "[%(levelname)s]  %(asctime)s{time} - %(name)s - %(funcName)s(%(lineno)d) - %(message)s"
+_format = "[%(levelname)s] %(asctime)s - %(name)s - %(funcName)s(%(lineno)d) - %(message)s"
+
+log_dir = 'logs'
+# створення
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+file = os.path.join(log_dir, 'logs.log')
 
 file_handler = logging.FileHandler(file, encoding='utf-8')
 file_handler.setLevel(logging.INFO)
