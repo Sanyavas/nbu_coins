@@ -101,16 +101,33 @@ class PlaywrightAsyncRunner:
         """
         Купівля знайденого продукту.
         """
-        try:
-            await asyncio.sleep(random.randint(1, 3))
-            buy_button = await self.page.wait_for_selector("div#r_buy_intovar", state='visible')
-            await buy_button.focus()
-            await buy_button.click()
-            logger.info(f"{self.email} | '{self.coin_name}' успішно додано в кошик.", extra={'custom_color': True})
-            await asyncio.sleep(30)
-        except Exception as e:
-            logger.error(f"{self.email} | Purchase failed: {e}")
-            raise
+        max_attempts = 5  # Максимальна кількість спроб
+        attempt = 0
+
+        while attempt < max_attempts:
+            try:
+                await asyncio.sleep(random.randint(1, 3))
+                buy_button_count = await self.page.locator("div#r_buy_intovar").count()
+
+                if buy_button_count > 0:
+                    buy_button = self.page.locator("div#r_buy_intovar")
+                    await buy_button.focus()
+                    await buy_button.click()
+                    logger.info(f"{self.email} | '{self.coin_name}' успішно додано в кошик.",
+                                extra={'custom_color': True})
+                    return
+                else:
+                    logger.warning(
+                        f"{self.email} | Кнопка 'Купити' не знайдена. Спроба #{attempt + 1}. Перезавантаження сторінки...")
+                    await asyncio.sleep(random.randint(1, 2))
+                    await self.page.reload()
+                    attempt += 1
+            except Exception as e:
+                logger.error(f"{self.email} | Помилка під час покупки: {e}")
+                raise
+
+        logger.error(f"{self.email} | Не вдалося знайти кнопку 'Купити' після {max_attempts} спроб.")
+        raise RuntimeError("Купівля не вдалася після декількох спроб.")
 
     async def buy_coins(self, playwright: Playwright):
         """
