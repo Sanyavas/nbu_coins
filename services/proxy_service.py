@@ -53,5 +53,8 @@ def get_random_proxy():
                     port = item.get("port")
                     username = item.get("username")
                     password = item.get("password")
+                    print({"PROXY_SERVER": f"{proxy_address}:{port}", "PROXY_USERNAME": username,
+                            "PROXY_PASSWORD": password})
                     return {"PROXY_SERVER": f"{proxy_address}:{port}", "PROXY_USERNAME": username,
                             "PROXY_PASSWORD": password}
+

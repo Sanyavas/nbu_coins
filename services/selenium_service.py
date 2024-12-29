@@ -180,7 +180,7 @@ class SeleniumRunner:
                 buy_button.click()
                 logger.info(f"{self.browser} | {self.email} | '{self.coin_name}' ==> Додано в кошик",
                             extra={'custom_color': True})
-                time.sleep(200)
+                time.sleep(60)
                 break
             except NoSuchElementException:
                 logger.error("Кнопку 'Купити' не знайдено, оновлюю сторінку...")
